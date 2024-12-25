@@ -27,9 +27,9 @@ def prima_ambata(array):
 def seconda_ambata(array, array2):
     sum = 0
     for i in range(len(array)):
-        if array[i] not in array2:
+        if (array[i] not in array2):
             sum+=array[i]
-    if sum > 90:        
+    if (sum > 90):        
         return sum%90
     else:
         return sum
@@ -37,8 +37,8 @@ def seconda_ambata(array, array2):
 def terza_ambata(array,array2):
     nuovo_array = []
     for i in range(len(array)):
-        if array[i] not in array2:
-            if array[i] < 10:
+        if (array[i] not in array2):
+            if (array[i] < 10):
                 nuovo_array.append(array[i])
             else:
                 decine = int(array[i]/10)
@@ -49,12 +49,12 @@ def terza_ambata(array,array2):
         nuovo_array2 = []
         for i in range(len(nuovo_array)-1):
             sum = nuovo_array[i]+nuovo_array[i+1]
-            if sum > 9:
-                sum = sum - 9
+            if (sum > 9):
+                sum-=9
             nuovo_array2.append(sum)
         nuovo_array=nuovo_array2
     stringa = int(str(nuovo_array[0])+str(nuovo_array[1]))
-    if stringa > 90:        
+    if (stringa > 90):        
         return stringa%90
     else:
         return stringa
@@ -80,15 +80,10 @@ with open(FILE_INPUT, 'r', encoding='utf-8') as f:
         for row in f:
             array = row.split('\t')
             estrazione_array = [int(array[2]),int(array[3]),int(array[4]),int(array[5]),int(array[6])]
-            # print("Trovo i numeri che formano la somma 90")
             arrayscelti = somma90(estrazione_array)
             if len(arrayscelti)>0:
-                # print("Calcolo la prima ambata")
                 ambata_uno = prima_ambata(arrayscelti)
-                # print("Calcolo la seconda ambata")
                 ambata_due = seconda_ambata(estrazione_array, arrayscelti)
-                # print("Calcolo la terza ambata")
                 ambata_tre = terza_ambata(estrazione_array, arrayscelti)  
-                # print("Stampo il risultato nel file di uscita")
                 g.write(f"{str(array[0])};{str(array[1])};{int(ambata_uno)};{int(ambata_due)};{int(ambata_tre)}\n")
 print("Procedura eseguita. File scritto con successo")
