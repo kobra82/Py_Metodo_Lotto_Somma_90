@@ -1,5 +1,6 @@
 import argparse
-import csv
+from sys import exit
+from os import system
 
 def somma90(array):
     ele1=99
@@ -62,8 +63,17 @@ parser = argparse.ArgumentParser()
 parser.add_argument('-f1','--filein', help='file in ingresso')
 parser.add_argument('-f2','--fileout', help='file in uscita')
 args = parser.parse_args()
-FILE_INPUT = args.filein
-FILE_OUTPUT = args.fileout
+
+if (args.filein):
+    FILE_INPUT = args.filein
+else:
+    system("python.exe .\metodo_somma_90.py -h")
+    exit()
+if (args.fileout):
+    FILE_OUTPUT = args.fileout
+else:
+    system("python.exe .\metodo_somma_90.py -h")
+    exit()
 
 with open(FILE_INPUT, 'r', encoding='utf-8') as f:
     with open(FILE_OUTPUT, 'w', encoding='utf-8') as g:
@@ -81,3 +91,4 @@ with open(FILE_INPUT, 'r', encoding='utf-8') as f:
                 ambata_tre = terza_ambata(estrazione_array, arrayscelti)  
                 # print("Stampo il risultato nel file di uscita")
                 g.write(f"{str(array[0])};{str(array[1])};{int(ambata_uno)};{int(ambata_due)};{int(ambata_tre)}\n")
+print("Procedura eseguita. File scritto con successo")
