@@ -128,14 +128,50 @@ if args.filecontrollo:
             if indice not in previsioni_da_eliminare:
                 h_out.write(riga_testo)                            
 else:
+    # Carichiamo prima tutto l'archivio in memoria per poter scorrere i colpi successivi
     with open(FILE_INPUT, 'r', encoding='utf-8') as f:
-        with open(FILE_OUTPUT, 'w', encoding='utf-8') as g:
-            for row in f:
-                array = row.split('\t')
-                estrazione_array = [int(array[2]),int(array[3]),int(array[4]),int(array[5]),int(array[6])]
-                arrayscelti = somma90(estrazione_array)
-                if len(arrayscelti)>0:
-                    ambata_uno = prima_ambata(arrayscelti)
-                    ambata_due = seconda_ambata(estrazione_array, arrayscelti)
-                    ambata_tre = terza_ambata(estrazione_array, arrayscelti)  
-                    g.write(f"{str(array[0])};{str(array[1])};{int(ambata_uno)};{int(ambata_due)};{int(ambata_tre)};90\n")
+        archivio = [row.strip().split('\t') for row in f if row.strip()]
+
+    with open(FILE_OUTPUT, 'w', encoding='utf-8') as g:
+        for i, riga_corrente in enumerate(archivio):
+            if len(riga_corrente) < 7: continue
+            
+            data_corrente = datetime.datetime.strptime(riga_corrente[0], "%Y/%m/%d")
+            ruota_corrente = riga_corrente[1]
+            
+            estrazione_array = [int(riga_corrente[2]), int(riga_corrente[3]), int(riga_corrente[4]), int(riga_corrente[5]), int(riga_corrente[6])]
+            arrayscelti = somma90(estrazione_array)
+            
+            if len(arrayscelti) > 0:
+                # Calcoliamo la previsione teorica
+                ambata_uno = prima_ambata(arrayscelti)
+                ambata_due = seconda_ambata(estrazione_array, arrayscelti)
+                ambata_tre = terza_ambata(estrazione_array, arrayscelti)
+                
+                # Creiamo la quartina teorica per il controllo preventivo (con il 90 fisso)
+                numeri_previsione = [str(int(ambata_uno)), str(int(ambata_due)), str(int(ambata_tre)), "90"]
+                
+                colpi_passati = 0
+                gia_sfaldato = False
+                
+                # Controlliamo cosa è successo nei colpi successivi su quella ruota
+                for riga_successiva in archivio[i+1:]:
+                    if riga_successiva[1] == ruota_corrente:
+                        data_successiva = datetime.datetime.strptime(riga_successiva[0], "%Y/%m/%d")
+                        if data_successiva > data_corrente:
+                            colpi_passati += 1
+                            
+                            # Controlliamo se è uscito un numero nei colpi precedenti
+                            if colpi_passati <= 5:
+                                estratti_reali = [x.strip() for x in riga_successiva[2:7]]
+                                for num in numeri_previsione:
+                                    if num in estratti_reali:
+                                        gia_sfaldato = True
+                
+                # Calcoliamo il colpo a cui è arrivata la previsione per la prossima estrazione
+                colpo_prossimo = colpi_passati + 1
+                
+                # LA LISTA DELLA SPESA: Mostra le previsioni vergini che si trovano tra il 3° e il 5° colpo utile
+                if 3 <= colpo_prossimo <= 5 and not gia_sfaldato:
+                    # Modificata la stringa di scrittura: inserisce il colpo corrente alla fine della riga
+                    g.write(f"{str(riga_corrente[0])};{str(riga_corrente[1])};{int(ambata_uno)};{int(ambata_due)};{int(ambata_tre)};90;COLPO_{colpo_prossimo}\n")
