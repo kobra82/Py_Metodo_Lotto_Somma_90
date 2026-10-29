@@ -89,21 +89,22 @@ if args.filecontrollo:
                 riga2 = row2.split('\t')
                 if ((datetime.datetime.strptime(str(tabella[i][0]),"%Y/%m/%d")) < (datetime.datetime.strptime(str(riga2[0]),"%Y/%m/%d")) and colpo < 6):
                     if (tabella[i][1] == riga2[1]):
+                        estratti_puliti = [x.strip() for x in riga2[2:7]]
                         numero = 0
                         esito = []
-                        if tabella[i][2] in riga2[2:7]:
+                        if tabella[i][2].strip() in estratti_puliti:
                             trovato = 1
                             numero += 1
                             esito.append(tabella[i][2])
-                        if tabella[i][3] in riga2[2:7]:
+                        if tabella[i][3].strip() in estratti_puliti:
                             trovato = 1
                             numero += 1
                             esito.append(tabella[i][3])
-                        if tabella[i][4] in riga2[2:7]:
+                        if tabella[i][4].strip() in estratti_puliti:
                             trovato = 1
                             numero += 1
                             esito.append(tabella[i][4])
-                        if tabella[i][5] in riga2[2:7]:
+                        if tabella[i][5].strip() in estratti_puliti:
                             trovato = 1
                             numero += 1
                             esito.append(tabella[i][5])
