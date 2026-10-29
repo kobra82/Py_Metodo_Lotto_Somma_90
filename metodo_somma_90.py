@@ -95,7 +95,6 @@ if args.filecontrollo:
                 riga2 = row2.split('\t')
                 if ((datetime.datetime.strptime(str(tabella[i][0]),"%Y/%m/%d")) < (datetime.datetime.strptime(str(riga2[0]),"%Y/%m/%d")) and colpo < 6):
                     if (tabella[i][1] == riga2[1]):
-                        # Questa riga pulisce gli estratti da spazi e dal carattere di fine riga (\n)
                         estratti_puliti = [x.strip() for x in riga2[2:7]]
                         numero = 0
                         esito = []
